@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <script type="text/javascript" src="http://gc.kis.scr.kaspersky-labs.com/7A328A19-31D7-8743-9124-15684F043446/main.js" charset="UTF-8"></script><script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+  <script type="text/javascript">
+  window.onload = function () {
+    var chartData = 
+    {
+
+      title:{
+      text: "EU Ref2 Voting"
+      },
+      axisX: {
+      },
+      axisY:{
+        includeZero: true
+      },
+      data: [
+      {
+        type: "line",
+        dataPoints: [ ]
+      }
+      ]
+    };
+
+
+    $.get('petition.csv', function(csv) {
+        var csvData = $.csv.toObjects(csv)
+        var dataPoints = $.map(csvData, function(row) {
+            return { x: new Date(row.x), y: parseInt(row.y) }
+    });
+        chartData.data[0].dataPoints = dataPoints
+        $("#num_signatures").text(dataPoints[dataPoints.length-1].y);
+        var chart = new CanvasJS.Chart("chartContainer", chartData);
+        chart.render();
+    });
+
+
+  }
+  </script>
+  <div id="chartContainer" style="height: 300px; width: 100%;">
+  </div>
+  <a href="./petition.csv">download CSV</a> (the first three data points are from memory/estimates)
+  <p></p>
+  <p></p>
+  <p></p>
+  <h2>now at: <span id="num_signatures"></span> signatures</h2>
+  <p>(within last 5 minutes or so)</p>
+</body>
+</html>
+
